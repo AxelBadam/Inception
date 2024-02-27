@@ -5,10 +5,15 @@ php-fpm \
 php-mysql \ 
 mariadb-client \
 wget \
+bash \
 && rm -rf /var/lib/apt/lists/*
 						
-RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
-RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz \
-										&& rm wordpress-6.0-fr_FR.tar.gz
-RUN	chown -R root:root /var/www/wordpress
+# RUN	chown -R www-data:www-data /var/www/wordpress
 
+RUN mkdir -p /run/php/ /var/www/wordpress
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+
+COPY ./tools/wp.sh /
+RUN chmod +x wp.sh
+
+ENTRYPOINT ["sh", "/wp.sh"]
