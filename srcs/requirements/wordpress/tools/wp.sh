@@ -1,36 +1,40 @@
 #!/bin/sh
 
-Wait for MariaDB to be ready
-attempts=0
-while ! mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME &>/dev/null; do
-	attempts=$((attempts + 1))
-    echo "MariaDB unavailable. Attempt $attempts: Trying again in 5 sec."
-	if [ $attempts -ge 12 ]; then
-		echo "Max attempts reached. MariaDB connection could not be established."
-        exit 1
-	fi
-    sleep 5
-done
-echo "MariaDB connection established!"
+#Wait for MariaDB to be ready
 
-echo "Listing databases:"
-mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME <<EOF
-SHOW DATABASES;
-EOF
+tail -f /dev/null
+
+## run this separate please
+# attempts=0
+# while ! mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME &>/dev/null; do
+# 	attempts=$((attempts + 1))
+#     echo "MariaDB unavailable. Attempt $attempts: Trying again in 5 sec."
+# 	if [ $attempts -ge 12 ]; then
+# 		echo "Max attempts reached. MariaDB connection could not be established."
+#         exit 1
+# 	fi
+#     sleep 5
+# done
+# echo "MariaDB connection established!"
+
+# echo "Listing databases:"
+# mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME <<EOF
+# SHOW DATABASES;
+# EOF
 
 # Set working dir
-cd /var/www/wordpress/
+# cd /var/www/wordpress/
 
-# Download WP cli
-wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp
+# # Download WP cli
+# wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp
 
-# Make it executable
-chmod +x /usr/local/bin/wp
+# # Make it executable
+# chmod +x /usr/local/bin/wp
 
-# DL WP using the CLI
-wp core download --allow-root
+# # DL WP using the CLI
+# wp core download --allow-root
 
-# Create WordPress database config
+# # Create WordPress database config
 wp config create --allow-root\
 	--dbname=$WP_DB_NAME \
 	--dbuser=$WP_DB_USER \

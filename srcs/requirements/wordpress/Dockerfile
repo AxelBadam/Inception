@@ -16,4 +16,7 @@ COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY ./tools/wp.sh /
 RUN chmod +x wp.sh
 
+EXPOSE 9000
+
+
 ENTRYPOINT ["sh", "/wp.sh"]
