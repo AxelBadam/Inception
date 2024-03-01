@@ -6,9 +6,10 @@ all:
 	
 clean:
 	docker-compose -f srcs/docker-compose.yml down --rmi all -v
-
+	rm -rf /Users/atuliara/Desktop/mariadb-data
+	rm -rf /Users/atuliara/Desktop/wordpress-data
 fclean: clean
-	sed -i '/atuliara\.42\.fr/d' /etc/hosts
+	# sed -i '/atuliara\.42\.fr/d' /etc/hosts
 	rm -rf /Users/atuliara/Desktop/mariadb-data
 	rm -rf /Users/atuliara/Desktop/wordpress-data
 	docker system prune -f

@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:buster
 
 RUN apt-get update -y && apt-get install mariadb-server -y
 RUN apt-get install bash
@@ -17,4 +17,5 @@ RUN chmod +x /mariadb.sh
 
 EXPOSE 3306
 
-CMD ["/mariadb.sh"]
+
+ENTRYPOINT ["/mariadb.sh"]
