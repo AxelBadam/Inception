@@ -1,41 +1,36 @@
-#!/bin/sh
+#!/bin/bash
 
-#Wait for MariaDB to be ready
+attempts=0
+while ! mariadb -h"$MYSQL_HOST" -u"$WP_DB_USER" -p"$WP_DB_PWD" "$WP_DB_NAME" > /dev/null 2>&1; do
+    attempts=$((attempts + 1))
+    echo "MariaDB unavailable. Attempt $attempts: Trying again in 5 sec."
+    if [ $attempts -ge 12 ]; then
+        echo "Max attempts reached. MariaDB connection could not be established."
+        exit 1
+    fi
+    sleep 5
+done
+echo "MariaDB connection established!"
 
-sleep 3
-
-# attempts=0
-# while !mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME &>/dev/null; do
-# 	attempts=$((attempts + 1))
-#     echo "MariaDB unavailable. Attempt $attempts: Trying again in 5 sec."
-# 	if [ $attempts -ge 12 ]; then
-# 		echo "Max attempts reached. MariaDB connection could not be established."
-#         exit 1
-# 	fi
-#     sleep 5
-# done
-# echo "MariaDB connection established!"
+sleep 10
 
 echo "Listing databases:"
 mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME <<EOF
 SHOW DATABASES;
 EOF
 
-Set working dir
 cd /var/www/wordpress/
 
 # Download WP cli
 wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp
 
-
-
-# # Make it executable
+# Make it executable
 chmod +x /usr/local/bin/wp
 
-# # DL WP using the CLI
+# DL WP using the CLI
 wp core download --allow-root
 
-# # # Create WP database config
+# Create WP database config
 wp config create --allow-root\
 	--dbname=$WP_DB_NAME \
 	--dbuser=$WP_DB_USER \
@@ -82,8 +77,4 @@ chown -R nginx:nginx /var/www/wordpress
 chmod -R 755 /var/www/wordpress
 
 # Fire up PHP-FPM (-F to keep in foreground and avoid recalling script)
-# php-fpm -F
-
 /usr/sbin/php-fpm7.4 -F
-
-exec tail -f /dev/null
