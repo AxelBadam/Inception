@@ -59,7 +59,7 @@ wp user create \
 	--allow-root
 
 # Install theme for WP
-wp theme install inspiro \
+wp theme install neve \
 	--activate \
 	--allow-root
 
@@ -73,7 +73,7 @@ wp option update home "https://$DOMAIN_NAME" --allow-root
 # Transfer ownership to the user
 chown -R nginx:nginx /var/www/wordpress
 
-# Full permissions for owner, read/exec to others
+# Full permissions for owner
 chmod -R 755 /var/www/wordpress
 
 # Fire up PHP-FPM (-F to keep in foreground and avoid recalling script)

@@ -6,7 +6,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/atuliara/Desktop/mariadb-data
+      device: /home/atuliara/data/mariadb-data
       o: bind
 
   wordpress-data:
@@ -14,7 +14,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/atuliara/Desktop/wordpress-data
+      device: /home/atuliara/data/mariadb-data
       o: bind
 
 networks:
