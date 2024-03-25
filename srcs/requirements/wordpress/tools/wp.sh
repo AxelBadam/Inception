@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 5
+
 attempts=0
 while ! mariadb -h"$MYSQL_HOST" -u"$WP_DB_USER" -p"$WP_DB_PWD" "$WP_DB_NAME" > /dev/null 2>&1; do
     attempts=$((attempts + 1))
@@ -12,8 +14,6 @@ while ! mariadb -h"$MYSQL_HOST" -u"$WP_DB_USER" -p"$WP_DB_PWD" "$WP_DB_NAME" > /
 done
 echo "MariaDB connection established!"
 
-sleep 10
-
 echo "Listing databases:"
 mariadb -h$MYSQL_HOST -u$WP_DB_USER -p$WP_DB_PWD $WP_DB_NAME <<EOF
 SHOW DATABASES;
@@ -24,13 +24,11 @@ cd /var/www/wordpress/
 # Download WP cli
 wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp
 
-# Make it executable
 chmod +x /usr/local/bin/wp
 
 # DL WP using the CLI
 wp core download --allow-root
 
-# Create WP database config
 wp config create --allow-root\
 	--dbname=$WP_DB_NAME \
 	--dbuser=$WP_DB_USER \
@@ -39,7 +37,6 @@ wp config create --allow-root\
 	--path=/var/www/wordpress/ \
 	--force
 
-# Install WP and feed db config
 wp core install \
 	--url=$DOMAIN_NAME \
 	--title=$WP_TITLE \
@@ -50,7 +47,6 @@ wp core install \
 	--skip-email \
 	--path=/var/www/wordpress/
 
-# Create WP user
 wp user create \
 	$WP_USER \
 	$WP_EMAIL \
@@ -58,12 +54,10 @@ wp user create \
 	--user_pass=$WP_PWD \
 	--allow-root
 
-# Install theme for WP
 wp theme install neve \
 	--activate \
 	--allow-root
 
-# Update plugins
 wp plugin update --all --allow-root
 
 # Update WP address and site address to match our domain
@@ -72,8 +66,6 @@ wp option update home "https://$DOMAIN_NAME" --allow-root
 
 # Transfer ownership to the user
 chown -R nginx:nginx /var/www/wordpress
-
-# Full permissions for owner
 chmod -R 755 /var/www/wordpress
 
 # Fire up PHP-FPM (-F to keep in foreground and avoid recalling script)

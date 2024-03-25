@@ -10,8 +10,6 @@ mariadb-client \
 wget \
 bash \
 && rm -rf /var/lib/apt/lists/*
-						
-# RUN	chown -R www-data:www-data /var/www/wordpress
 
 RUN mkdir -p /run/php/ /var/www/wordpress
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf

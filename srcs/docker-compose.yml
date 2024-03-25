@@ -14,7 +14,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/atuliara/data/mariadb-data
+      device: /home/atuliara/data/wordpress-data
       o: bind
 
 networks:
@@ -44,8 +44,6 @@ services:
       dockerfile: Dockerfile
     image: wordpress-img:release
     container_name: wordpress-cont
-    ports:
-      - "9000:9000"
     env_file: .env
     networks:
       - mynetwork
@@ -61,8 +59,6 @@ services:
       dockerfile: Dockerfile
     image: mariadb-img:release
     container_name: mariadb-cont
-    ports:
-      - "3306:3306"
     env_file: .env
     restart: always
     networks:
